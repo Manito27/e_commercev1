@@ -32,6 +32,9 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-*$b@dpy5eo_(i_3xdl8
 DEBUG = env_bool('DJANGO_DEBUG', True)
 
 ALLOWED_HOSTS = env_list('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost')
+render_host = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if render_host and render_host not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_host)
 
 
 # =========================
@@ -151,9 +154,8 @@ if USE_MYSQL:
     db_options = {
         'charset': 'utf8mb4',
     }
-if env_bool('DB_SSL', True):
-    db_options['ssl'] = {'ssl-mode': 'REQUIRED'}
-
+    if env_bool('DB_SSL', True):
+        db_options['ssl'] = {'ca': '/etc/ssl/certs/ca-certificates.crt'}
 
     DATABASES = {
         'default': {
@@ -161,7 +163,7 @@ if env_bool('DB_SSL', True):
             'NAME': os.getenv('DB_NAME', 'e_commerce'),
             'USER': os.getenv('DB_USER', 'root'),
             'PASSWORD': os.getenv('DB_PASSWORD', ''),
-            'HOST': os.environ['DB_HOST'],
+            'HOST': os.getenv('DB_HOST', '127.0.0.1'),
             'PORT': os.getenv('DB_PORT', '3306'),
             'OPTIONS': db_options,
         }
