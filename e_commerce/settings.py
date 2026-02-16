@@ -151,8 +151,9 @@ if USE_MYSQL:
     db_options = {
         'charset': 'utf8mb4',
     }
-    if env_bool('DB_SSL', True):
-        db_options['ssl'] = {'ca': '/etc/ssl/certs/ca-certificates.crt'}
+if env_bool('DB_SSL', True):
+    db_options['ssl'] = {'ssl-mode': 'REQUIRED'}
+
 
     DATABASES = {
         'default': {
