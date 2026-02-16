@@ -155,7 +155,8 @@ if USE_MYSQL:
         'charset': 'utf8mb4',
     }
     if env_bool('DB_SSL', True):
-        db_options['ssl'] = {'ca': '/etc/ssl/certs/ca-certificates.crt'}
+        db_ssl_ca = os.getenv('DB_SSL_CA', '/etc/ssl/certs/ca-certificates.crt')
+        db_options['ssl'] = {'ca': db_ssl_ca}
 
     DATABASES = {
         'default': {
