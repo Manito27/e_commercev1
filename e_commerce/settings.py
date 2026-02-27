@@ -54,6 +54,9 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'knox',
+    'cloudinary',
+    'cloudinary_storage',
+
 
     'supermercado',
 ]
@@ -209,6 +212,33 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+USE_CLOUDINARY = env_bool('USE_CLOUDINARY', False)
+
+if not DEBUG and USE_CLOUDINARY:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
+else:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
+
+"""
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 STORAGES = {
     'default': {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
@@ -217,7 +247,7 @@ STORAGES = {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
-
+"""
 
 # =========================
 # DEFAULT PK
